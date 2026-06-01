@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — API Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #1a1a24;
+      --border: #252535;
+      --border-bright: #3a3a52;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --accent3: #43e8a4;
+      --text: #e8e8f0;
+      --text-dim: #888899;
+      --text-muted: #444455;
+      --font-display: 'Syne', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+
+    html { background: var(--bg); color: var(--text); font-family: var(--font-display); }
+    body { min-height: 100vh; overflow-x: hidden; }
+
+    /* ── Layout ── */
+    .app { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 260px; min-height: 100vh; background: var(--surface);
+      border-right: 1px solid var(--border); padding: 24px 0;
+      display: flex; flex-direction: column; flex-shrink: 0;
+      position: fixed; left: 0; top: 0; bottom: 0; z-index: 10;
+    }
+    .sidebar-logo {
+      padding: 0 24px 24px; border-bottom: 1px solid var(--border);
+      font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+    }
+    .sidebar-logo span { color: var(--accent); }
+    .sidebar-version { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 2px; }
+    .sidebar-section { padding: 20px 24px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); font-weight: 600; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 24px; cursor: pointer; font-size: 14px; font-weight: 600;
+      color: var(--text-dim); transition: all 0.15s; border-left: 3px solid transparent;
+      user-select: none;
+    }
+    .nav-item:hover { color: var(--text); background: rgba(108,99,255,0.06); }
+    .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(108,99,255,0.08); }
+    .nav-icon { width: 18px; text-align: center; font-size: 15px; }
+    .sidebar-bottom { margin-top: auto; padding: 20px 24px; border-top: 1px solid var(--border); }
+    .user-chip {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface2); border-radius: var(--radius); padding: 10px 12px;
+    }
+    .user-avatar {
+      width: 32px; height: 32px; border-radius: 50%; background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800; color: white; flex-shrink: 0;
+    }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 10px; color: var(--accent3); font-family: var(--font-mono); text-transform: uppercase; }
+    .logout-btn {
+      background: none; border: none; color: var(--text-muted); cursor: pointer;
+      font-size: 16px; padding: 2px; transition: color 0.15s;
+    }
+    .logout-btn:hover { color: var(--accent2); }
+
+    .main { margin-left: 260px; flex: 1; min-height: 100vh; }
+    .main-content { padding: 40px; max-width: 1100px; }
+
+    /* ── Auth Screen ── */
+    .auth-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: var(--bg); padding: 20px;
+      background-image: radial-gradient(ellipse at 20% 50%, rgba(108,99,255,0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(255,101,132,0.05) 0%, transparent 50%);
+    }
+    .auth-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 48px; width: 100%; max-width: 420px;
+      box-shadow: var(--shadow);
+      animation: slideUp 0.4s ease;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+    .auth-logo { font-size: 28px; font-weight: 800; margin-bottom: 4px; letter-spacing: -1px; }
+    .auth-logo span { color: var(--accent); }
+    .auth-tagline { font-size: 13px; color: var(--text-dim); margin-bottom: 32px; }
+    .auth-tabs { display: flex; gap: 0; margin-bottom: 28px; background: var(--surface2); border-radius: 8px; padding: 4px; }
+    .auth-tab {
+      flex: 1; padding: 8px; text-align: center; cursor: pointer;
+      font-size: 13px; font-weight: 700; border-radius: 6px; transition: all 0.15s;
+      color: var(--text-dim);
+    }
+    .auth-tab.active { background: var(--accent); color: white; }
+
+    /* ── Forms ── */
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input {
+      width: 100%; padding: 11px 14px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text);
+      font-family: var(--font-display); font-size: 14px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+    .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,99,255,0.15); }
+    .form-input::placeholder { color: var(--text-muted); }
+    .form-input.error { border-color: var(--accent2); }
+
+    select.form-input { cursor: pointer; }
+    select.form-input option { background: var(--surface2); }
+    textarea.form-input { resize: vertical; min-height: 80px; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 11px 20px; border-radius: var(--radius); font-family: var(--font-display);
+      font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+      border: none; text-decoration: none; white-space: nowrap;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: #7c74ff; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(108,99,255,0.4); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-danger { background: rgba(255,101,132,0.15); color: var(--accent2); border: 1px solid rgba(255,101,132,0.3); }
+    .btn-danger:hover { background: rgba(255,101,132,0.25); }
+    .btn-ghost { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border-bright); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn-full { width: 100%; }
+    .btn-icon { width: 32px; height: 32px; padding: 0; border-radius: 6px; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+    }
+    .card-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .card-sub { font-size: 13px; color: var(--text-dim); margin-bottom: 20px; }
+
+    /* ── Page Header ── */
+    .page-header { margin-bottom: 32px; }
+    .page-title { font-size: 30px; font-weight: 800; letter-spacing: -1px; }
+    .page-sub { font-size: 14px; color: var(--text-dim); margin-top: 4px; }
+
+    /* ── Stats Row ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 20px; position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .stat-card.accent::before { background: var(--accent); }
+    .stat-card.green::before { background: var(--accent3); }
+    .stat-card.red::before { background: var(--accent2); }
+    .stat-card.yellow::before { background: #fbbf24; }
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
+    .stat-value { font-size: 32px; font-weight: 800; font-family: var(--font-mono); }
+
+    /* ── Task Table ── */
+    .task-filters {
+      display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: flex-end;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 4px; }
+    .filter-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600; }
+    .filter-input {
+      padding: 7px 12px; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); font-family: var(--font-display); font-size: 13px;
+      outline: none; transition: border-color 0.15s; min-width: 140px;
+    }
+    .filter-input:focus { border-color: var(--accent); }
+
+    .task-table { width: 100%; border-collapse: collapse; }
+    .task-table th {
+      text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .task-table td { padding: 13px 14px; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: middle; }
+    .task-table tr:last-child td { border-bottom: none; }
+    .task-table tr:hover td { background: rgba(108,99,255,0.03); }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-flex; align-items: center; padding: 3px 8px;
+      border-radius: 4px; font-size: 11px; font-weight: 700; font-family: var(--font-mono);
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-todo { background: rgba(136,136,153,0.15); color: #888899; }
+    .badge-in_progress { background: rgba(108,99,255,0.15); color: var(--accent); }
+    .badge-done { background: rgba(67,232,164,0.15); color: var(--accent3); }
+    .badge-cancelled { background: rgba(255,101,132,0.15); color: var(--accent2); }
+    .badge-low { background: rgba(67,232,164,0.1); color: var(--accent3); }
+    .badge-medium { background: rgba(108,99,255,0.1); color: #a59fff; }
+    .badge-high { background: rgba(251,191,36,0.1); color: #fbbf24; }
+    .badge-urgent { background: rgba(255,101,132,0.1); color: var(--accent2); }
+    .badge-admin { background: rgba(255,101,132,0.12); color: var(--accent2); }
+    .badge-user { background: rgba(108,99,255,0.1); color: #a59fff; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; backdrop-filter: blur(4px);
+      animation: fadeIn 0.15s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border-bright);
+      border-radius: 14px; padding: 32px; width: 100%; max-width: 480px;
+      box-shadow: var(--shadow); max-height: 90vh; overflow-y: auto;
+      animation: slideUp 0.2s ease;
+    }
+    .modal-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+
+    /* ── Toast ── */
+    .toast-container {
+      position: fixed; bottom: 24px; right: 24px; z-index: 999;
+      display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    }
+    .toast {
+      padding: 14px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 600;
+      min-width: 280px; max-width: 380px; box-shadow: var(--shadow);
+      animation: toastIn 0.3s ease; display: flex; align-items: center; gap: 10px;
+      pointer-events: all;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: none; } }
+    .toast-success { background: #0d2e1f; border: 1px solid rgba(67,232,164,0.4); color: var(--accent3); }
+    .toast-error { background: #2e0d17; border: 1px solid rgba(255,101,132,0.4); color: var(--accent2); }
+    .toast-info { background: #16162a; border: 1px solid rgba(108,99,255,0.4); color: #a59fff; }
+
+    /* ── Code block (token display) ── */
+    .code-block {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      padding: 12px; font-family: var(--font-mono); font-size: 11px; color: var(--accent3);
+      word-break: break-all; line-height: 1.6;
+    }
+
+    /* ── API Log ── */
+    .api-log {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px; font-family: var(--font-mono); font-size: 12px; line-height: 1.8;
+      max-height: 300px; overflow-y: auto;
+    }
+    .log-entry { display: flex; gap: 12px; padding: 3px 0; }
+    .log-time { color: var(--text-muted); flex-shrink: 0; }
+    .log-method { font-weight: 700; flex-shrink: 0; min-width: 50px; }
+    .log-url { color: var(--text-dim); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .log-status { flex-shrink: 0; }
+    .log-200 { color: var(--accent3); }
+    .log-201 { color: var(--accent); }
+    .log-400, .log-401, .log-403, .log-404, .log-409, .log-422 { color: var(--accent2); }
+    .log-500 { color: #ff3b3b; }
+    .log-GET { color: var(--accent); }
+    .log-POST { color: var(--accent3); }
+    .log-PATCH { color: #fbbf24; }
+    .log-DELETE { color: var(--accent2); }
+
+    /* ── Empty state ── */
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); }
+    .empty-state-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state-text { font-size: 15px; font-weight: 600; color: var(--text-dim); }
+    .empty-state-sub { font-size: 13px; margin-top: 4px; }
+
+    /* ── Misc ── */
+    .flex { display: flex; }
+    .flex-1 { flex: 1; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-8 { gap: 8px; }
+    .gap-12 { gap: 12px; }
+    .mb-16 { margin-bottom: 16px; }
+    .mb-24 { margin-bottom: 24px; }
+    .text-sm { font-size: 13px; }
+    .text-muted { color: var(--text-dim); }
+    .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+    .loading-spinner {
+      width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .pagination { display: flex; align-items: center; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+    .page-info { font-size: 13px; color: var(--text-dim); margin: 0 8px; }
+
+    .api-base-url {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+      padding: 10px 14px; font-family: var(--font-mono); font-size: 13px; color: var(--accent3);
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
+<script>
+const { useState, useEffect, useCallback, useRef } = React;
+const e = React.createElement;
+
+// ── Config ────────────────────────────────────────────────────────────────────
+const API_BASE = 'http://localhost:8000/api/v1';
+
+// ── API Client ────────────────────────────────────────────────────────────────
+const apiLogs = { entries: [], listeners: [] };
+function addLog(method, url, status) {
+  const time = new Date().toLocaleTimeString('en', { hour12: false });
+  apiLogs.entries.unshift({ method, url: url.replace(API_BASE, ''), status, time });
+  if (apiLogs.entries.length > 50) apiLogs.entries.pop();
+  apiLogs.listeners.forEach(fn => fn([...apiLogs.entries]));
+}
+
+async function apiRequest(method, path, body, token) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const url = API_BASE + path;
+  try {
+    const res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
+    const data = await res.json();
+    addLog(method, url, res.status);
+    return { ok: res.ok, status: res.status, data };
+  } catch (err) {
+    addLog(method, url, 0);
+    return { ok: false, status: 0, data: { message: 'Network error — is the API running?' } };
+  }
+}
+
+// ── Token Storage ─────────────────────────────────────────────────────────────
+const tokenStore = {
+  get: () => ({ access: sessionStorage.getItem('tf_access'), refresh: sessionStorage.getItem('tf_refresh') }),
+  set: (access, refresh) => { sessionStorage.setItem('tf_access', access); sessionStorage.setItem('tf_refresh', refresh); },
+  clear: () => { sessionStorage.removeItem('tf_access'); sessionStorage.removeItem('tf_refresh'); },
+};
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+let toastId = 0;
+let globalToast;
+function Toast() {
+  const [toasts, setToasts] = useState([]);
+  useEffect(() => {
+    globalToast = (msg, type = 'info') => {
+      const id = ++toastId;
+      setToasts(t => [...t, { id, msg, type }]);
+      setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3500);
+    };
+  }, []);
+  return e('div', { className: 'toast-container' },
+    toasts.map(t => e('div', { key: t.id, className: `toast toast-${t.type}` },
+      e('span', null, t.type === 'success' ? '✓' : t.type === 'error' ? '✗' : 'i'),
+      e('span', null, t.msg)
+    ))
+  );
+}
+const toast = (msg, type) => globalToast?.(msg, type);
+
+// ── Hooks ─────────────────────────────────────────────────────────────────────
+function useApiLogs() {
+  const [logs, setLogs] = useState([...apiLogs.entries]);
+  useEffect(() => {
+    apiLogs.listeners.push(setLogs);
+    return () => { apiLogs.listeners = apiLogs.listeners.filter(f => f !== setLogs); };
+  }, []);
+  return logs;
+}
+
+// ── Components ────────────────────────────────────────────────────────────────
+function Spinner() { return e('div', { className: 'loading-spinner' }); }
+
+function Modal({ title, onClose, children, footer }) {
+  useEffect(() => {
+    const h = e => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [onClose]);
+  return e('div', { className: 'modal-overlay', onClick: e => e.target === e.currentTarget && onClose() },
+    e('div', { className: 'modal' },
+      e('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20 } },
+        e('div', { className: 'modal-title' }, title),
+        e('button', { className: 'btn btn-ghost btn-icon', onClick: onClose }, '✕')
+      ),
+      children,
+      footer && e('div', { className: 'modal-footer' }, footer)
+    )
+  );
+}
+
+function StatusBadge({ status }) {
+  return e('span', { className: `badge badge-${status}` }, status.replace('_', ' '));
+}
+function PriorityBadge({ priority }) {
+  return e('span', { className: `badge badge-${priority}` }, priority);
+}
+
+// ── Auth Screen ───────────────────────────────────────────────────────────────
+function AuthScreen({ onAuth }) {
+  const [tab, setTab] = useState('login');
+  const [form, setForm] = useState({ email: '', password: '', username: '', full_name: '' });
+  const [loading, setLoading] = useState(false);
+  const set = k => ev => setForm(f => ({ ...f, [k]: ev.target.value }));
+
+  async function handleSubmit(ev) {
+    ev.preventDefault();
+    setLoading(true);
+    if (tab === 'login') {
+      const res = await apiRequest('POST', '/auth/login', { email: form.email, password: form.password });
+      if (res.ok) {
+        const { access_token, refresh_token } = res.data.data;
+        tokenStore.set(access_token, refresh_token);
+        const me = await apiRequest('GET', '/auth/me', null, access_token);
+        if (me.ok) { toast('Welcome back!', 'success'); onAuth(me.data.data, access_token); }
+      } else {
+        toast(res.data.detail || res.data.message || 'Login failed', 'error');
+      }
+    } else {
+      const res = await apiRequest('POST', '/auth/register', {
+        email: form.email, password: form.password,
+        username: form.username, full_name: form.full_name || undefined
+      });
+      if (res.ok) {
+        toast('Account created! Please log in.', 'success');
+        setTab('login');
+      } else {
+        const msg = res.data.errors?.[0]?.message || res.data.message || 'Registration failed';
+        toast(msg, 'error');
+      }
+    }
+    setLoading(false);
+  }
+
+  return e('div', { className: 'auth-screen' },
+    e('div', { className: 'auth-card' },
+      e('div', { className: 'auth-logo' }, 'Task', e('span', null, 'Flow')),
+      e('div', { className: 'auth-tagline' }, 'Secure REST API with JWT Auth & RBAC'),
+      e('div', { className: 'auth-tabs' },
+        ['login', 'register'].map(t =>
+          e('div', { key: t, className: `auth-tab ${tab === t ? 'active' : ''}`, onClick: () => setTab(t) },
+            t === 'login' ? 'Sign In' : 'Register'
+          )
+        )
+      ),
+      e('form', { onSubmit: handleSubmit },
+        e('div', { className: 'form-group' },
+          e('label', { className: 'form-label' }, 'Email'),
+          e('input', { className: 'form-input', type: 'email', value: form.email, onChange: set('email'), placeholder: 'you@example.com', required: true })
+        ),
+        tab === 'register' && e('div', { className: 'form-group' },
+          e('label', { className: 'form-label' }, 'Username'),
+          e('input', { className: 'form-input', type: 'text', value: form.username, onChange: set('username'), placeholder: 'your_username', required: true })
+        ),
+        tab === 'register' && e('div', { className: 'form-group' },
+          e('label', { className: 'form-label' }, 'Full Name (optional)'),
+          e('input', { className: 'form-input', type: 'text', value: form.full_name, onChange: set('full_name'), placeholder: 'Jane Doe' })
+        ),
+        e('div', { className: 'form-group' },
+          e('label', { className: 'form-label' }, 'Password'),
+          e('input', { className: 'form-input', type: 'password', value: form.password, onChange: set('password'), placeholder: tab === 'register' ? 'Min 8 chars, upper+lower+digit' : '••••••••', required: true })
+        ),
+        e('button', { type: 'submit', className: 'btn btn-primary btn-full', disabled: loading },
+          loading ? e(Spinner) : (tab === 'login' ? 'Sign In' : 'Create Account')
+        )
+      ),
+      e('div', { style: { marginTop: 20, padding: '14px', background: 'var(--surface2)', borderRadius: 8, fontSize: 12, color: 'var(--text-muted)' } },
+        e('strong', { style: { color: 'var(--text-dim)' } }, '🔑 Default admin: '),
+        'admin@taskflow.dev / Admin1234!'
+      )
+    )
+  );
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+function Dashboard({ user, token }) {
+  const [tasks, setTasks] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    apiRequest('GET', '/tasks?page_size=100', null, token).then(res => {
+      if (res.ok) { setTasks(res.data.data.tasks); setTotal(res.data.data.total); }
+    });
+  }, [token]);
+
+  const counts = tasks.reduce((a, t) => { a[t.status] = (a[t.status] || 0) + 1; return a; }, {});
+
+  return e('div', null,
+    e('div', { className: 'page-header' },
+      e('div', { className: 'page-title' }, `Welcome, ${user.full_name || user.username} 👋`),
+      e('div', { className: 'page-sub' }, `${user.email} — ${user.role === 'admin' ? '🛡️ Administrator' : '👤 User'}`)
+    ),
+    e('div', { className: 'stats-grid' },
+      [
+        { label: 'Total Tasks', value: total, cls: 'accent' },
+        { label: 'In Progress', value: counts['in_progress'] || 0, cls: 'accent' },
+        { label: 'Completed', value: counts['done'] || 0, cls: 'green' },
+        { label: 'Pending', value: counts['todo'] || 0, cls: 'yellow' },
+      ].map(({ label, value, cls }) =>
+        e('div', { key: label, className: `stat-card ${cls}` },
+          e('div', { className: 'stat-label' }, label),
+          e('div', { className: 'stat-value' }, value)
+        )
+      )
+    ),
+    e('div', { className: 'card' },
+      e('div', { className: 'card-title' }, 'Recent Tasks'),
+      e('div', { className: 'card-sub' }, 'Your last 5 tasks'),
+      tasks.length === 0
+        ? e('div', { className: 'empty-state' },
+            e('div', { className: 'empty-state-icon' }, '📋'),
+            e('div', { className: 'empty-state-text' }, 'No tasks yet'),
+            e('div', { className: 'empty-state-sub' }, 'Head to Tasks to create your first one')
+          )
+        : e('table', { className: 'task-table' },
+            e('thead', null, e('tr', null,
+              ['Title', 'Status', 'Priority', 'Created'].map(h => e('th', { key: h }, h))
+            )),
+            e('tbody', null,
+              tasks.slice(0, 5).map(t =>
+                e('tr', { key: t.id },
+                  e('td', null, t.title),
+                  e('td', null, e(StatusBadge, { status: t.status })),
+                  e('td', null, e(PriorityBadge, { priority: t.priority })),
+                  e('td', { style: { color: 'var(--text-muted)', fontSize: 12 } }, new Date(t.created_at).toLocaleDateString())
+                )
+              )
+            )
+          )
+    )
+  );
+}
+
+// ── Task Manager ──────────────────────────────────────────────────────────────
+function TaskManager({ user, token }) {
+  const [tasks, setTasks] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState({ status: '', priority: '', search: '' });
+  const [showCreate, setShowCreate] = useState(false);
+  const [editTask, setEditTask] = useState(null);
+  const [deleteTask, setDeleteTask] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  const fetchTasks = useCallback(async (p = page, f = filters) => {
+    setLoading(true);
+    const params = new URLSearchParams({ page: p, page_size: 15 });
+    if (f.status) params.set('status', f.status);
+    if (f.priority) params.set('priority', f.priority);
+    if (f.search) params.set('search', f.search);
+    const endpoint = user.role === 'admin' ? '/tasks/admin/all' : '/tasks';
+    const res = await apiRequest('GET', `${endpoint}?${params}`, null, token);
+    if (res.ok) {
+      setTasks(res.data.data.tasks);
+      setTotal(res.data.data.total);
+      setTotalPages(res.data.data.total_pages);
+    }
+    setLoading(false);
+  }, [token, user.role]);
+
+  useEffect(() => { fetchTasks(1, filters); }, []);
+
+  function applyFilters() { setPage(1); fetchTasks(1, filters); }
+
+  async function handleSave(data, taskId) {
+    setSaving(true);
+    let res;
+    if (taskId) {
+      res = await apiRequest('PATCH', `/tasks/${taskId}`, data, token);
+    } else {
+      res = await apiRequest('POST', '/tasks', data, token);
+    }
+    if (res.ok) {
+      toast(taskId ? 'Task updated!' : 'Task created!', 'success');
+      setShowCreate(false); setEditTask(null);
+      fetchTasks(page, filters);
+    } else {
+      const msg = res.data.errors?.[0]?.message || res.data.message || 'Failed';
+      toast(msg, 'error');
+    }
+    setSaving(false);
+  }
+
+  async function handleDelete(task) {
+    const res = await apiRequest('DELETE', `/tasks/${task.id}`, null, token);
+    if (res.ok) {
+      toast('Task deleted', 'success');
+      setDeleteTask(null);
+      fetchTasks(page, filters);
+    } else {
+      toast('Failed to delete task', 'error');
+    }
+  }
+
+  return e('div', null,
+    e('div', { className: 'page-header flex items-center justify-between' },
+      e('div', null,
+        e('div', { className: 'page-title' }, user.role === 'admin' ? 'All Tasks (Admin)' : 'My Tasks'),
+        e('div', { className: 'page-sub' }, `${total} task${total !== 1 ? 's' : ''} total`)
+      ),
+      e('button', { className: 'btn btn-primary', onClick: () => setShowCreate(true) }, '+ New Task')
+    ),
+    e('div', { className: 'card' },
+      e('div', { className: 'task-filters' },
+        e('div', { className: 'filter-group' },
+          e('div', { className: 'filter-label' }, 'Search'),
+          e('input', { className: 'filter-input', placeholder: 'Search tasks...', value: filters.search,
+            onChange: ev => setFilters(f => ({ ...f, search: ev.target.value })),
+            onKeyDown: ev => ev.key === 'Enter' && applyFilters() })
+        ),
+        e('div', { className: 'filter-group' },
+          e('div', { className: 'filter-label' }, 'Status'),
+          e('select', { className: 'filter-input', value: filters.status, onChange: ev => setFilters(f => ({ ...f, status: ev.target.value })) },
+            e('option', { value: '' }, 'All statuses'),
+            ['todo', 'in_progress', 'done', 'cancelled'].map(s => e('option', { key: s, value: s }, s.replace('_', ' ')))
+          )
+        ),
+        e('div', { className: 'filter-group' },
+          e('div', { className: 'filter-label' }, 'Priority'),
+          e('select', { className: 'filter-input', value: filters.priority, onChange: ev => setFilters(f => ({ ...f, priority: ev.target.value })) },
+            e('option', { value: '' }, 'All priorities'),
+            ['low', 'medium', 'high', 'urgent'].map(p => e('option', { key: p, value: p }, p))
+          )
+        ),
+        e('button', { className: 'btn btn-ghost btn-sm', onClick: applyFilters }, 'Apply')
+      ),
+      loading
+        ? e('div', { style: { textAlign: 'center', padding: 40 } }, e(Spinner))
+        : tasks.length === 0
+          ? e('div', { className: 'empty-state' },
+              e('div', { className: 'empty-state-icon' }, '✅'),
+              e('div', { className: 'empty-state-text' }, 'No tasks found'),
+              e('div', { className: 'empty-state-sub' }, 'Try adjusting filters or create a new task')
+            )
+          : e('table', { className: 'task-table' },
+              e('thead', null, e('tr', null,
+                ['Title', 'Status', 'Priority', user.role === 'admin' ? 'Owner' : null, 'Due', 'Actions']
+                  .filter(Boolean).map(h => e('th', { key: h }, h))
+              )),
+              e('tbody', null,
+                tasks.map(t =>
+                  e('tr', { key: t.id },
+                    e('td', null, e('div', { style: { fontWeight: 600 } }, t.title),
+                      t.description && e('div', { style: { fontSize: 12, color: 'var(--text-muted)', marginTop: 2 } },
+                        t.description.slice(0, 60) + (t.description.length > 60 ? '…' : '')
+                      )
+                    ),
+                    e('td', null, e(StatusBadge, { status: t.status })),
+                    e('td', null, e(PriorityBadge, { priority: t.priority })),
+                    user.role === 'admin' && e('td', { style: { fontSize: 12, color: 'var(--text-muted)' } }, t.owner?.username || '—'),
+                    e('td', { style: { fontSize: 12, color: 'var(--text-muted)' } }, t.due_date ? new Date(t.due_date).toLocaleDateString() : '—'),
+                    e('td', null,
+                      e('div', { style: { display: 'flex', gap: 6 } },
+                        e('button', { className: 'btn btn-ghost btn-sm', onClick: () => setEditTask(t) }, '✎ Edit'),
+                        e('button', { className: 'btn btn-danger btn-sm', onClick: () => setDeleteTask(t) }, '✕')
+                      )
+                    )
+                  )
+                )
+              )
+            ),
+      totalPages > 1 && e('div', { className: 'pagination' },
+        e('button', { className: 'btn btn-ghost btn-sm', disabled: page === 1, onClick: () => { const np = page - 1; setPage(np); fetchTasks(np, filters); } }, '←'),
+        e('span', { className: 'page-info' }, `Page ${page} of ${totalPages}`),
+        e('button', { className: 'btn btn-ghost btn-sm', disabled: page >= totalPages, onClick: () => { const np = page + 1; setPage(np); fetchTasks(np, filters); } }, '→')
+      )
+    ),
+    (showCreate || editTask) && e(TaskFormModal, {
+      task: editTask,
+      onClose: () => { setShowCreate(false); setEditTask(null); },
+      onSave: handleSave,
+      saving,
+    }),
+    deleteTask && e(Modal, {
+      title: 'Delete Task',
+      onClose: () => setDeleteTask(null),
+      footer: e('div', { style: { display: 'flex', gap: 10 } },
+        e('button', { className: 'btn btn-ghost', onClick: () => setDeleteTask(null) }, 'Cancel'),
+        e('button', { className: 'btn btn-danger', onClick: () => handleDelete(deleteTask) }, 'Delete Task')
+      )
+    },
+      e('p', { style: { color: 'var(--text-dim)' } }, `Are you sure you want to delete "${deleteTask.title}"? This cannot be undone.`)
+    )
+  );
+}
+
+function TaskFormModal({ task, onClose, onSave, saving }) {
+  const [form, setForm] = useState({
+    title: task?.title || '',
+    description: task?.description || '',
+    status: task?.status || 'todo',
+    priority: task?.priority || 'medium',
+    is_public: task?.is_public || false,
+    due_date: task?.due_date ? task.due_date.slice(0, 16) : '',
+  });
+  const set = k => ev => setForm(f => ({ ...f, [k]: ev.target.value }));
+  const setCheck = k => ev => setForm(f => ({ ...f, [k]: ev.target.checked }));
+
+  function handleSubmit(ev) {
+    ev.preventDefault();
+    const data = { ...form, due_date: form.due_date ? new Date(form.due_date).toISOString() : null };
+    if (!data.due_date) delete data.due_date;
+    if (!data.description) delete data.description;
+    onSave(data, task?.id);
+  }
+
+  return e(Modal, { title: task ? 'Edit Task' : 'New Task', onClose,
+    footer: e('div', { style: { display: 'flex', gap: 10 } },
+      e('button', { type: 'button', className: 'btn btn-ghost', onClick: onClose }, 'Cancel'),
+      e('button', { type: 'submit', form: 'task-form', className: 'btn btn-primary', disabled: saving },
+        saving ? e(Spinner) : (task ? 'Save Changes' : 'Create Task')
+      )
+    )
+  },
+    e('form', { id: 'task-form', onSubmit: handleSubmit },
+      e('div', { className: 'form-group' },
+        e('label', { className: 'form-label' }, 'Title *'),
+        e('input', { className: 'form-input', value: form.title, onChange: set('title'), required: true, placeholder: 'Task title' })
+      ),
+      e('div', { className: 'form-group' },
+        e('label', { className: 'form-label' }, 'Description'),
+        e('textarea', { className: 'form-input', value: form.description, onChange: set('description'), placeholder: 'Optional description' })
+      ),
+      e('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 } },
+        e('div', { className: 'form-group' },
+          e('label', { className: 'form-label' }, 'Status'),
+          e('select', { className: 'form-input', value: form.status, onChange: set('status') },
+            ['todo', 'in_progress', 'done', 'cancelled'].map(s =>
+              e('option', { key: s, value: s }, s.replace('_', ' '))
+            )
+          )
+        ),
+        e('div', { className: 'form-group' },
+          e('label', { className: 'form-label' }, 'Priority'),
+          e('select', { className: 'form-input', value: form.priority, onChange: set('priority') },
+            ['low', 'medium', 'high', 'urgent'].map(p => e('option', { key: p, value: p }, p))
+          )
+        )
+      ),
+      e('div', { className: 'form-group' },
+        e('label', { className: 'form-label' }, 'Due Date'),
+        e('input', { className: 'form-input', type: 'datetime-local', value: form.due_date, onChange: set('due_date') })
+      ),
+      e('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+        e('input', { type: 'checkbox', id: 'is_public', checked: form.is_public, onChange: setCheck('is_public'), style: { accentColor: 'var(--accent)' } }),
+        e('label', { htmlFor: 'is_public', style: { fontSize: 14, cursor: 'pointer' } }, 'Make this task public')
+      )
+    )
+  );
+}
+
+// ── Profile ───────────────────────────────────────────────────────────────────
+function ProfilePage({ user, token, onPasswordChanged }) {
+  const [pwForm, setPwForm] = useState({ current_password: '', new_password: '' });
+  const [saving, setSaving] = useState(false);
+
+  async function changePassword(ev) {
+    ev.preventDefault();
+    setSaving(true);
+    const res = await apiRequest('PUT', '/auth/me/password', pwForm, token);
+    if (res.ok) {
+      toast('Password changed successfully!', 'success');
+      setPwForm({ current_password: '', new_password: '' });
+    } else {
+      toast(res.data.message || 'Failed to change password', 'error');
+    }
+    setSaving(false);
+  }
+
+  return e('div', null,
+    e('div', { className: 'page-header' },
+      e('div', { className: 'page-title' }, 'Profile'),
+      e('div', { className: 'page-sub' }, 'Your account details')
+    ),
+    e('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 } },
+      e('div', { className: 'card' },
+        e('div', { className: 'card-title' }, 'Account Info'),
+        e('div', { className: 'card-sub' }, 'Your registered details'),
+        [
+          ['User ID', user.id, true],
+          ['Email', user.email, false],
+          ['Username', user.username, false],
+          ['Full Name', user.full_name || '—', false],
+          ['Role', null, false, e('span', { className: `badge badge-${user.role}` }, user.role)],
+          ['Account Status', null, false, e('span', { className: 'badge badge-done' }, user.is_active ? 'Active' : 'Inactive')],
+          ['Member Since', new Date(user.created_at).toLocaleDateString('en', { dateStyle: 'long' }), false],
+        ].map(([label, value, mono, node]) =>
+          e('div', { key: label, style: { display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border)' } },
+            e('div', { style: { fontSize: 13, color: 'var(--text-muted)' } }, label),
+            node || e('div', { style: { fontSize: 13, fontFamily: mono ? 'var(--font-mono)' : 'inherit', maxWidth: 200, textAlign: 'right', wordBreak: 'break-all' } }, value)
+          )
+        )
+      ),
+      e('div', { className: 'card' },
+        e('div', { className: 'card-title' }, 'Change Password'),
+        e('div', { className: 'card-sub' }, 'Update your password'),
+        e('form', { onSubmit: changePassword },
+          e('div', { className: 'form-group' },
+            e('label', { className: 'form-label' }, 'Current Password'),
+            e('input', { className: 'form-input', type: 'password', value: pwForm.current_password,
+              onChange: ev => setPwForm(f => ({ ...f, current_password: ev.target.value })), required: true })
+          ),
+          e('div', { className: 'form-group' },
+            e('label', { className: 'form-label' }, 'New Password'),
+            e('input', { className: 'form-input', type: 'password', value: pwForm.new_password,
+              onChange: ev => setPwForm(f => ({ ...f, new_password: ev.target.value })),
+              placeholder: 'Min 8 chars, upper+lower+digit', required: true })
+          ),
+          e('button', { type: 'submit', className: 'btn btn-primary', disabled: saving },
+            saving ? e(Spinner) : 'Update Password'
+          )
+        )
+      )
+    )
+  );
+}
+
+// ── Token Inspector ───────────────────────────────────────────────────────────
+function TokenInspector({ token }) {
+  const tokens = tokenStore.get();
+  function decodeJWT(t) {
+    try {
+      const parts = t.split('.');
+      if (parts.length !== 3) return null;
+      return JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+    } catch { return null; }
+  }
+  const payload = decodeJWT(token);
+
+  return e('div', null,
+    e('div', { className: 'page-header' },
+      e('div', { className: 'page-title' }, 'Token Inspector'),
+      e('div', { className: 'page-sub' }, 'Inspect your current JWT tokens')
+    ),
+    e('div', { style: { display: 'grid', gap: 20 } },
+      e('div', { className: 'card' },
+        e('div', { className: 'card-title' }, 'Access Token'),
+        e('div', { className: 'card-sub' }, `Expires in ${payload ? Math.max(0, Math.floor((payload.exp * 1000 - Date.now()) / 60000)) : '?'} minutes`),
+        e('div', { className: 'code-block' }, tokens.access || '—'),
+        payload && e('div', null,
+          e('div', { className: 'divider' }),
+          e('div', { style: { fontSize: 13, fontWeight: 700, marginBottom: 10, color: 'var(--text-dim)' } }, 'Decoded Payload'),
+          e('div', { className: 'code-block' }, JSON.stringify(payload, null, 2))
+        )
+      ),
+      e('div', { className: 'card' },
+        e('div', { className: 'card-title' }, 'Refresh Token'),
+        e('div', { className: 'card-sub' }, 'Used to get a new access token'),
+        e('div', { className: 'code-block' }, tokens.refresh || '—')
+      )
+    )
+  );
+}
+
+// ── API Log Viewer ────────────────────────────────────────────────────────────
+function ApiLogPage() {
+  const logs = useApiLogs();
+  return e('div', null,
+    e('div', { className: 'page-header' },
+      e('div', { className: 'page-title' }, 'API Log'),
+      e('div', { className: 'page-sub' }, 'Live request/response log')
+    ),
+    e('div', { className: 'card' },
+      e('div', { className: 'api-base-url' },
+        e('span', null, '🔗 API Base URL'),
+        e('span', null, API_BASE)
+      ),
+      logs.length === 0
+        ? e('div', { className: 'empty-state' },
+            e('div', { className: 'empty-state-icon' }, '📡'),
+            e('div', { className: 'empty-state-text' }, 'No requests yet'),
+            e('div', { className: 'empty-state-sub' }, 'API calls will appear here in real time')
+          )
+        : e('div', { className: 'api-log' },
+            logs.map((log, i) =>
+              e('div', { key: i, className: 'log-entry' },
+                e('span', { className: 'log-time' }, log.time),
+                e('span', { className: `log-method log-${log.method}` }, log.method),
+                e('span', { className: 'log-url' }, log.url),
+                e('span', { className: `log-status log-${log.status}` }, log.status || 'ERR')
+              )
+            )
+          )
+    )
+  );
+}
+
+// ── Admin Panel ───────────────────────────────────────────────────────────────
+function AdminPanel({ token }) {
+  const [users, setUsers] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState('');
+
+  async function fetchUsers(s = search) {
+    setLoading(true);
+    const params = new URLSearchParams({ page_size: 50 });
+    if (s) params.set('search', s);
+    const res = await apiRequest('GET', `/admin/users?${params}`, null, token);
+    if (res.ok) { setUsers(res.data.data.users); setTotal(res.data.data.total); }
+    setLoading(false);
+  }
+
+  useEffect(() => { fetchUsers(); }, []);
+
+  async function toggleActive(user) {
+    const res = await apiRequest('PATCH', `/admin/users/${user.id}`, { is_active: !user.is_active }, token);
+    if (res.ok) { toast(`User ${user.is_active ? 'deactivated' : 'activated'}`, 'success'); fetchUsers(); }
+    else toast('Failed', 'error');
+  }
+
+  async function makeAdmin(user) {
+    const res = await apiRequest('PATCH', `/admin/users/${user.id}`, { role: user.role === 'admin' ? 'user' : 'admin' }, token);
+    if (res.ok) { toast('Role updated', 'success'); fetchUsers(); }
+    else toast(res.data.message || 'Failed', 'error');
+  }
+
+  return e('div', null,
+    e('div', { className: 'page-header' },
+      e('div', { className: 'page-title' }, '🛡️ Admin Panel'),
+      e('div', { className: 'page-sub' }, `${total} registered users`)
+    ),
+    e('div', { className: 'card' },
+      e('div', { className: 'task-filters', style: { marginBottom: 20 } },
+        e('div', { className: 'filter-group' },
+          e('div', { className: 'filter-label' }, 'Search users'),
+          e('input', { className: 'filter-input', placeholder: 'Email or username...', value: search,
+            onChange: ev => setSearch(ev.target.value),
+            onKeyDown: ev => ev.key === 'Enter' && fetchUsers() })
+        ),
+        e('button', { className: 'btn btn-ghost btn-sm', onClick: () => fetchUsers() }, 'Search')
+      ),
+      loading
+        ? e('div', { style: { textAlign: 'center', padding: 40 } }, e(Spinner))
+        : e('table', { className: 'task-table' },
+            e('thead', null, e('tr', null,
+              ['User', 'Role', 'Status', 'Joined', 'Actions'].map(h => e('th', { key: h }, h))
+            )),
+            e('tbody', null,
+              users.map(u =>
+                e('tr', { key: u.id },
+                  e('td', null,
+                    e('div', { style: { fontWeight: 600 } }, u.username),
+                    e('div', { style: { fontSize: 12, color: 'var(--text-muted)' } }, u.email)
+                  ),
+                  e('td', null, e('span', { className: `badge badge-${u.role}` }, u.role)),
+                  e('td', null, e('span', { className: `badge badge-${u.is_active ? 'done' : 'cancelled'}` }, u.is_active ? 'active' : 'inactive')),
+                  e('td', { style: { fontSize: 12, color: 'var(--text-muted)' } }, new Date(u.created_at).toLocaleDateString()),
+                  e('td', null,
+                    e('div', { style: { display: 'flex', gap: 6 } },
+                      e('button', { className: 'btn btn-ghost btn-sm', onClick: () => makeAdmin(u) },
+                        u.role === 'admin' ? 'Demote' : 'Make Admin'
+                      ),
+                      e('button', { className: `btn btn-sm ${u.is_active ? 'btn-danger' : 'btn-ghost'}`, onClick: () => toggleActive(u) },
+                        u.is_active ? 'Deactivate' : 'Activate'
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+    )
+  );
+}
+
+// ── Main App ──────────────────────────────────────────────────────────────────
+function App() {
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [page, setPage] = useState('dashboard');
+
+  // Try restoring session
+  useEffect(() => {
+    const { access } = tokenStore.get();
+    if (access) {
+      apiRequest('GET', '/auth/me', null, access).then(res => {
+        if (res.ok) { setUser(res.data.data); setToken(access); }
+        else tokenStore.clear();
+      });
+    }
+  }, []);
+
+  function handleAuth(user, token) { setUser(user); setToken(token); }
+  function handleLogout() { tokenStore.clear(); setUser(null); setToken(null); setPage('dashboard'); toast('Logged out', 'info'); }
+
+  if (!user) return e('div', null, e(AuthScreen, { onAuth: handleAuth }), e(Toast));
+
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: '⬛' },
+    { id: 'tasks', label: 'Tasks', icon: '✅' },
+    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: 'tokens', label: 'Token Inspector', icon: '🔑' },
+    { id: 'apilog', label: 'API Log', icon: '📡' },
+    ...(user.role === 'admin' ? [{ id: 'admin', label: 'Admin Panel', icon: '🛡️' }] : []),
+  ];
+
+  const pageContent = {
+    dashboard: e(Dashboard, { user, token }),
+    tasks: e(TaskManager, { user, token }),
+    profile: e(ProfilePage, { user, token }),
+    tokens: e(TokenInspector, { token }),
+    apilog: e(ApiLogPage),
+    admin: e(AdminPanel, { token }),
+  };
+
+  return e('div', { className: 'app' },
+    e('aside', { className: 'sidebar' },
+      e('div', { className: 'sidebar-logo' },
+        'Task', e('span', null, 'Flow'),
+        e('div', { className: 'sidebar-version' }, 'API v1.0.0')
+      ),
+      e('div', { className: 'sidebar-section' }, 'Navigation'),
+      navItems.map(item =>
+        e('div', { key: item.id, className: `nav-item ${page === item.id ? 'active' : ''}`, onClick: () => setPage(item.id) },
+          e('span', { className: 'nav-icon' }, item.icon),
+          item.label
+        )
+      ),
+      e('div', { className: 'sidebar-bottom' },
+        e('div', { className: 'user-chip' },
+          e('div', { className: 'user-avatar' }, (user.username?.[0] || 'U').toUpperCase()),
+          e('div', { className: 'user-info' },
+            e('div', { className: 'user-name' }, user.username),
+            e('div', { className: 'user-role' }, user.role)
+          ),
+          e('button', { className: 'logout-btn', onClick: handleLogout, title: 'Logout' }, '⇥')
+        )
+      )
+    ),
+    e('main', { className: 'main' },
+      e('div', { className: 'main-content' },
+        pageContent[page] || e('div', null, '404')
+      )
+    ),
+    e(Toast)
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(e(App));
+</script>
+</body>
+</html>
