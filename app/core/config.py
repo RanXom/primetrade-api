@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     host: str = "127.0.0.1"
     port: int = 8000
 
-    database_url: str = "postgresql+asyncpg://postgres:password@localhost:5432/taskflow"
+    database_url: str = "postgresql+asyncpg://prime_user:12123@localhost:5432/devdb"
     database_echo: bool = False
 
 
