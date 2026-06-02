@@ -1,0 +1,125 @@
+2026-06-01 17:21:32.292 | INFO     | app.core.logging:setup_logging:44 | Logging initialized | Environment: production
+2026-06-01 17:21:32.292 | INFO     | app.core.logging:setup_logging:44 | Logging initialized | Environment: production
+2026-06-01 17:21:32.292 | INFO     | app.core.logging:setup_logging:44 | Logging initialized | Environment: production
+2026-06-01 17:21:32.292 | INFO     | app.main:lifespan:27 | 🚀 Prime Trade API v1.0.0 starting up...
+2026-06-01 17:21:32.292 | INFO     | app.main:lifespan:27 | 🚀 Prime Trade API v1.0.0 starting up...
+2026-06-01 17:21:32.292 | INFO     | app.main:lifespan:27 | 🚀 Prime Trade API v1.0.0 starting up...
+2026-06-01 17:21:32.293 | INFO     | app.main:lifespan:28 |    Environment : production
+2026-06-01 17:21:32.293 | INFO     | app.main:lifespan:28 |    Environment : production
+2026-06-01 17:21:32.293 | INFO     | app.main:lifespan:28 |    Environment : production
+2026-06-01 17:21:32.293 | INFO     | app.main:lifespan:29 |    Debug mode  : False
+2026-06-01 17:21:32.293 | INFO     | app.main:lifespan:29 |    Debug mode  : False
+2026-06-01 17:21:32.293 | INFO     | app.main:lifespan:29 |    Debug mode  : False
+2026-06-01 17:21:32.293 | INFO     | app.core.logging:setup_logging:44 | Logging initialized | Environment: production
+2026-06-01 17:21:32.294 | INFO     | app.main:lifespan:27 | 🚀 Prime Trade API v1.0.0 starting up...
+2026-06-01 17:21:32.294 | INFO     | app.main:lifespan:28 |    Environment : production
+2026-06-01 17:21:32.294 | INFO     | app.main:lifespan:29 |    Debug mode  : False
+2026-06-01 17:21:32.382 | INFO     | app.main:lifespan:34 | ✅ Database tables initialized
+2026-06-01 17:21:32.383 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:21:32.383 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:21:32.383 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:21:36.044 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:22:06.137 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:22:36.236 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 4.2ms | 127.0.0.1
+2026-06-01 17:23:06.333 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.6ms | 127.0.0.1
+2026-06-01 17:23:36.425 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:24:06.517 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:24:36.611 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:25:06.712 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.8ms | 127.0.0.1
+2026-06-01 17:25:36.815 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:26:06.912 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:26:37.005 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:27:07.102 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:27:37.195 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:28:07.288 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:28:37.380 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:29:07.468 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.7ms | 127.0.0.1
+2026-06-01 17:29:37.560 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:30:07.655 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.6ms | 127.0.0.1
+2026-06-01 17:30:37.755 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:31:34.600 | INFO     | app.core.logging:setup_logging:44 | Logging initialized | Environment: production
+2026-06-01 17:31:34.600 | INFO     | app.core.logging:setup_logging:44 | Logging initialized | Environment: production
+2026-06-01 17:31:34.601 | INFO     | app.main:lifespan:27 | 🚀 Prime Trade API v1.0.0 starting up...
+2026-06-01 17:31:34.601 | INFO     | app.main:lifespan:27 | 🚀 Prime Trade API v1.0.0 starting up...
+2026-06-01 17:31:34.601 | INFO     | app.main:lifespan:28 |    Environment : production
+2026-06-01 17:31:34.601 | INFO     | app.main:lifespan:28 |    Environment : production
+2026-06-01 17:31:34.601 | INFO     | app.main:lifespan:29 |    Debug mode  : False
+2026-06-01 17:31:34.601 | INFO     | app.main:lifespan:29 |    Debug mode  : False
+2026-06-01 17:31:34.601 | INFO     | app.core.logging:setup_logging:44 | Logging initialized | Environment: production
+2026-06-01 17:31:34.601 | INFO     | app.main:lifespan:27 | 🚀 Prime Trade API v1.0.0 starting up...
+2026-06-01 17:31:34.601 | INFO     | app.main:lifespan:28 |    Environment : production
+2026-06-01 17:31:34.602 | INFO     | app.main:lifespan:29 |    Debug mode  : False
+2026-06-01 17:31:34.602 | INFO     | app.core.logging:setup_logging:44 | Logging initialized | Environment: production
+2026-06-01 17:31:34.602 | INFO     | app.main:lifespan:27 | 🚀 Prime Trade API v1.0.0 starting up...
+2026-06-01 17:31:34.602 | INFO     | app.main:lifespan:28 |    Environment : production
+2026-06-01 17:31:34.602 | INFO     | app.main:lifespan:29 |    Debug mode  : False
+2026-06-01 17:31:34.671 | INFO     | app.main:lifespan:34 | ✅ Database tables initialized
+2026-06-01 17:31:34.671 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:31:34.671 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:31:34.671 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:31:38.257 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.8ms | 127.0.0.1
+2026-06-01 17:32:06.614 | INFO     | app.middleware.logging:dispatch:22 | OPTIONS http://localhost:8000/api/v1/auth/register | 200 | 0.5ms | 172.18.0.1
+2026-06-01 17:32:06.624 | WARNING  | app.middleware.logging:dispatch:22 | POST http://localhost:8000/api/v1/auth/register | 422 | 3.3ms | 172.18.0.1
+2026-06-01 17:32:08.349 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:32:15.915 | WARNING  | app.middleware.logging:dispatch:22 | POST http://localhost:8000/api/v1/auth/register | 422 | 1.6ms | 172.18.0.1
+2026-06-01 17:32:24.296 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/register | 500 | 37.1ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:24.297 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:30.623 | INFO     | app.middleware.logging:dispatch:22 | OPTIONS http://localhost:8000/api/v1/auth/register | 200 | 0.3ms | 172.18.0.1
+2026-06-01 17:32:30.636 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/register | 500 | 11.3ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:30.637 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:33.099 | INFO     | app.middleware.logging:dispatch:22 | OPTIONS http://localhost:8000/api/v1/auth/login | 200 | 0.2ms | 172.18.0.1
+2026-06-01 17:32:33.111 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/login | 500 | 9.9ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:33.111 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/login: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:38.443 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:33:08.538 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:33:38.632 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:34:08.730 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:34:38.823 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:35:08.915 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:35:39.011 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:35:59.705 | INFO     | app.main:lifespan:41 | ⏹️  Application shutting down
+2026-06-01 17:36:27.158 | INFO     | app.core.logging:setup_logging:44 | Logging initialized | Environment: production
+2026-06-01 17:36:27.165 | INFO     | app.main:lifespan:27 | 🚀 Prime Trade API v1.0.0 starting up...
+2026-06-01 17:36:27.166 | INFO     | app.main:lifespan:28 |    Environment : production
+2026-06-01 17:36:27.166 | INFO     | app.main:lifespan:29 |    Debug mode  : False
+2026-06-01 17:36:27.230 | INFO     | app.main:lifespan:34 | ✅ Database tables initialized
+2026-06-01 17:36:30.999 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 1.0ms | 127.0.0.1
+2026-06-01 17:37:01.099 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:37:03.178 | INFO     | app.middleware.logging:dispatch:22 | OPTIONS http://localhost:8000/api/v1/auth/register | 200 | 0.3ms | 172.18.0.1
+2026-06-01 17:37:03.217 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/register | 500 | 36.9ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:37:03.218 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:37:17.696 | INFO     | app.middleware.logging:dispatch:22 | OPTIONS http://localhost:8000/api/v1/auth/register | 200 | 0.3ms | 172.18.0.1
+2026-06-01 17:37:17.710 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/register | 500 | 11.6ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:37:17.711 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:37:31.198 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.9ms | 127.0.0.1
+2026-06-01 17:37:41.687 | WARNING  | app.middleware.logging:dispatch:22 | GET http://localhost:8000/api/v1/auth/register | 405 | 0.6ms | 172.18.0.1
+2026-06-01 17:37:41.744 | WARNING  | app.middleware.logging:dispatch:22 | GET http://localhost:8000/favicon.ico | 404 | 0.5ms | 172.18.0.1
+2026-06-01 17:38:01.292 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.6ms | 127.0.0.1
+2026-06-01 17:38:24.742 | INFO     | app.middleware.logging:dispatch:22 | OPTIONS http://localhost:8000/api/v1/auth/register | 200 | 0.3ms | 172.18.0.1
+2026-06-01 17:38:24.755 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/register | 500 | 10.7ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:38:24.755 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:38:31.388 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.5ms | 127.0.0.1
+2026-06-01 17:38:47.672 | INFO     | app.middleware.logging:dispatch:22 | OPTIONS http://localhost:8000/api/v1/auth/login | 200 | 0.3ms | 172.18.0.1
+2026-06-01 17:38:47.687 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/login | 500 | 11.8ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:38:47.687 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/login: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:39:01.491 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.4ms | 127.0.0.1
+2026-06-01 17:39:31.603 | INFO     | app.middleware.logging:dispatch:22 | GET http://localhost:8000/health | 200 | 0.6ms | 127.0.0.1
+2026-06-01 17:39:51.224 | INFO     | app.main:lifespan:41 | ⏹️  Application shutting down

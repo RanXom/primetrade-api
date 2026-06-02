@@ -1,0 +1,38 @@
+2026-06-01 17:21:32.383 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:21:32.383 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:21:32.383 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:31:34.671 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:31:34.671 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:31:34.671 | ERROR    | app.main:lifespan:36 | ❌ Database initialization failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "pg_type_typname_nsp_index"
+DETAIL:  Key (typname, typnamespace)=(user_role, 2200) already exists.
+[SQL: CREATE TYPE user_role AS ENUM ('user', 'admin')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-06-01 17:32:24.296 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/register | 500 | 37.1ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:24.297 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:30.636 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/register | 500 | 11.3ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:30.637 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:33.111 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/login | 500 | 9.9ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:32:33.111 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/login: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:37:03.217 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/register | 500 | 36.9ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:37:03.218 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:37:17.710 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/register | 500 | 11.6ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:37:17.711 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:38:24.755 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/register | 500 | 10.7ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:38:24.755 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:38:47.687 | ERROR    | app.middleware.logging:dispatch:30 | POST http://localhost:8000/api/v1/auth/login | 500 | 11.8ms | 172.18.0.1 | ERROR: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-06-01 17:38:47.687 | ERROR    | app.middleware.exception_handler:internal_error_handler:53 | Internal server error on http://localhost:8000/api/v1/auth/login: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
